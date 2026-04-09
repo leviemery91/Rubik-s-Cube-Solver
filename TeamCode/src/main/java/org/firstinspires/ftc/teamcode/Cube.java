@@ -68,6 +68,23 @@ public class Cube {
             cube[2] = spinFace(cube[2],false);
         }
         else if(turn.equals("R'")){
+			Color[] tempColumn = {cube[0][0][2],cube[0][1][2],cube[0][2][2]};
+
+			cube[0][0][2] = cube[3][2][0];
+			cube[0][1][2] = cube[3][1][0];
+			cube[0][2][2] = cube[3][0][0];
+			
+			cube[1][0][2] = tempColumn[0];
+			cube[1][1][2] = tempcolumn[1];
+			cube[1][2][2] = tempColumn[2];
+
+			cube[5][0][2] = cube[1][0][2];
+			cube[5][1][2] = cube[1][1][2];
+			cube[5][2][2] = cube[1][2][2];
+
+			cube[3][0][0] = cube[5][2][2];
+			cube[3][1][0] = cube[5][1][2];
+			cube[3][2][0] = cube[5][0][2];
             cube[2] = spinFace(cube[2],true);
         }
         else if(turn.equals("L")){}
