@@ -31,9 +31,40 @@ public class Cube {
             cube[3][0] = o;
             cube[0] = spinFace(cube[0], false);
         }
-        else if(turn.equals("D")){}
-        else if(turn.equals("D'")){}
+        else if(turn.equals("D")){
+			Color[] tempRow = cube[1][2];
+			cube[1][2] = cube[4][2];
+			cube[4][2] = cube[3][2];
+			cube[3][2] = cube[2][2];
+			cube[2][2] = tempRow;
+			cube[5] = spinFace(cube[5], false);
+		}
+        else if(turn.equals("D'")){
+			Color[] tempRow = cube[1][2];
+			cube[1][2] = cube[2][2];
+			cube[2][2] = cube[3][2];
+			cube[3][2] = cube[4][2];
+			cube[4][2] = tempRow;
+			cube[5] = spinFace(cube[5],true);
+		}
         else if(turn.equals("R")){
+			Color[] tempColumn = {cube[0][0][2],cube[0][1][2],cube[0][2][2]};
+
+			cube[0][0][2] = cube[1][0][2];
+			cube[0][1][2] = cube[1][1][2];
+			cube[0][2][2] = cube[1][2][2];
+			
+			cube[1][0][2] = cube[5][0][2];
+			cube[1][1][2] = cube[5][1][2];
+			cube[1][2][2] = cube[5][2][2];
+
+			cube[5][0][2] = cube[3][0][0];
+			cube[5][1][2] = cube[3][1][0];
+			cube[5][2][2] = cube[3][2][0];
+
+			cube[3][0][0] = tempColumn[2];
+			cube[3][1][0] = tempColumn[1];
+			cube[3][2][0] = tempColumn[0];
             cube[2] = spinFace(cube[2],false);
         }
         else if(turn.equals("R'")){
