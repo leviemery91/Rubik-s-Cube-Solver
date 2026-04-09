@@ -20,10 +20,25 @@ public class CubeOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             cube.startScan();
             String move = cube.getLastMove();
+            byte[] cubeState = cube.getCubeState();
+            String cubeBytes = "";
+            if (cubeState != null) {
+                for (byte b : cubeState) {
+                    cubeBytes = cubeBytes + b;
+                    cubeBytes = cubeBytes + " ";
+                }
+            }
             telemetry.addData("Last Move", move);
+            if(cubeState != null)
+                telemetry.addData("Cube State", cubeState.toString());
+            telemetry.addData("Cube Bytes", cubeBytes);
             telemetry.addData("Status", cube.isConnected() ? "Connected" : "Searching...");
+            telemetry.addData("Move Count", cube.getMoveCount());
+            telemetry.addData("Cube Solved", cube.cubeSolved());
             telemetry.update();
-
+            if(gamepad1.b){
+                cube.resetCube();
+            }
             // Logic: If move == "U", run motor for 90 degrees, etc.
         }
 

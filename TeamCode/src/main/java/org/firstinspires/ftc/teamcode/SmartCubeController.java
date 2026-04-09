@@ -19,9 +19,10 @@ import java.util.UUID;
  * Handles connection and move decoding for Smart Cubes
  */
 public class SmartCubeController {
+    Cube cube = new Cube();
+
     private static final String TAG = "SmartCube";
 
-    // UUIDs from your JavaScript code
     private final UUID SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
     private final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
     private final UUID CLIENT_CONFIG_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -29,7 +30,9 @@ public class SmartCubeController {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGatt bluetoothGatt;
     private String lastMove = "";
+    private byte[] cubeState = null;
     private boolean connected = false;
+    private int moveCount = 0;
 
     public SmartCubeController() {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -65,6 +68,8 @@ public class SmartCubeController {
                 android.bluetooth.BluetoothGattDescriptor descriptor = txChar.getDescriptor(CLIENT_CONFIG_DESCRIPTOR);
                 descriptor.setValue(android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 gatt.writeDescriptor(descriptor);
+
+                gatt.readCharacteristic(txChar);
             }
         }
 
@@ -72,30 +77,28 @@ public class SmartCubeController {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             byte[] data = characteristic.getValue();
             processCubeData(data);
+            cubeState = data;
+        }
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                byte[] data = characteristic.getValue();
+                cubeState = data;
+            }
         }
     };
 
     private void processCubeData(byte[] data) {
-        if (data.length < 5) return;
-
         int turn = data[3] & 0xFF;
-        int sliceTurn = data[4] & 0xFF;
 
-        // Check for Slices first (M, E, S)
-        String move = decodeSlice(sliceTurn);
-
-        // If no slice, check standard turns
-        if (move.equals("")) {
+        String move = "";
             String[] moves = {"B", "B'", "F", "F'", "U", "U'", "D", "D'", "R", "R'", "L", "L'"};
             if (turn < moves.length) {
                 move = moves[turn];
             }
-        }
-
-        if (!move.equals("")) {
-            lastMove = move;
-            Log.d(TAG, "Cube Move: " + move);
-        }
+        lastMove = move;
+        moveCount++;
+        updateCube(move);
     }
 
     private String decodeSlice(int code) {
@@ -111,6 +114,7 @@ public class SmartCubeController {
         return "";
     }
 
+    public byte[] getCubeState(){ return cubeState; }
     public String getLastMove() { return lastMove; }
     public boolean isConnected() { return connected; }
 
@@ -130,5 +134,18 @@ public class SmartCubeController {
                 telemetry.addData("SmartCubeScan", "Found Device: " + device.getName() + " | Address: " + device.getAddress());
             }
         });
+    }
+
+    public void updateCube(String turn){
+        cube.updateCube(turn);
+    }
+    public int getMoveCount(){
+        return moveCount;
+    }
+    public boolean cubeSolved(){
+        return cube.cubeSolved();
+    }
+    public void resetCube(){
+        cube.resetCube();
     }
 }
