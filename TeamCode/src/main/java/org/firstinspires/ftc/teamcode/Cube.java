@@ -136,14 +136,62 @@ public class Cube {
                 cube[4] = spinFace(cube[4], true);
                 break;
             }
-            case "F":
+            case "F": {
+                Color[] tempRow = cube[0][2];
+
+                cube[0][2][0] = cube[4][2][2];
+                cube[0][2][1] = cube[4][1][2];
+                cube[0][2][2] = cube[4][0][2];
+
+                cube[4][2][2] = cube[5][0][2];
+                cube[4][1][2] = cube[5][0][1];
+                cube[4][0][2] = cube[5][0][0];
+
+                cube[5][0][0] = cube[2][2][0];
+                cube[5][0][1] = cube[2][1][0];
+                cube[5][0][2] = cube[2][0][0];
+
+                cube[2][2][0] = tempRow[2];
+                cube[2][1][0] = tempRow[1];
+                cube[2][0][0] = tempRow[0];
+
+                cube[1] = spinFace(cube[1], false);
                 break;
-            case "F'":
+            }
+            case "F'": {
+                Color[] tempRow = cube[0][2];
+
+                cube[0][2][0] = cube[2][0][0];
+                cube[0][2][1] = cube[2][1][0];
+                cube[0][2][2] = cube[2][2][0];
+
+                cube[2][0][0] = cube[5][0][2];
+                cube[2][1][0] = cube[5][0][1];
+                cube[2][2][0] = cube[5][0][0];
+
+                cube[5][0][2] = cube[4][2][2];
+                cube[5][0][1] = cube[4][1][2];
+                cube[5][0][0] = cube[4][0][2];
+
+                cube[4][2][2] = tempRow[0];
+                cube[4][1][2] = tempRow[1];
+                cube[4][0][2] = tempRow[2];
+
+                cube[1] = spinFace(cube[1], true);
                 break;
-            case "B":
+            }
+            case "B": {
+                Color[] tempRow = cube[0][0];
+
+                cube[3] = spinFace(cube[3], false);
                 break;
-            case "B'":
+            }
+            case "B'": {
+                Color[] tempRow = cube[0][0];
+
+                cube[3] = spinFace(cube[3], true);
                 break;
+            }
         }
 
 
