@@ -183,6 +183,22 @@ public class Cube {
             case "B": {
                 Color[] tempRow = cube[0][0];
 
+				cube[0][0][0] = cube[2][0][2];
+				cube[0][0][1] = cube[2][1][2];
+				cube[0][0][2] = cube[2][2][2];
+
+				cube[2][0][2] = cube[5][2][2];
+				cube[2][1][2] = cube[5][2][1];
+				cube[2][2][2] = cube[5][2][0];
+
+				cube[5][2][2] = cube[4][2][0];
+				cube[5][2][1] = cube[4][1][0];
+				cube[5][2][0] = cube[4][0][0];
+
+				cube[4][2][0] = tempRow[0];
+				cube[4][1][0] = tempRow[1];
+				cube[4][0][0] = tempRow[2];
+	
                 cube[3] = spinFace(cube[3], false);
                 break;
             }
