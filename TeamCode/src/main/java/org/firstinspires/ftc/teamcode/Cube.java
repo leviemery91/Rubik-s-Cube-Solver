@@ -15,84 +15,136 @@ public class Cube {
     }
 
     public void updateCube(String turn){
-        if(turn.equals("U'")){
-            Color[] o = cube[4][0];
-            cube[4][0] = cube[3][0];
-            cube[3][0] = cube[2][0];
-            cube[2][0] = cube[1][0];
-            cube[1][0] = o;
-            cube[0] = spinFace(cube[0], true);
+        switch (turn) {
+            case "U'": {
+                Color[] o = cube[4][0];
+                cube[4][0] = cube[3][0];
+                cube[3][0] = cube[2][0];
+                cube[2][0] = cube[1][0];
+                cube[1][0] = o;
+                cube[0] = spinFace(cube[0], true);
+                break;
+            }
+            case "U": {
+                Color[] o = cube[4][0];
+                cube[4][0] = cube[1][0];
+                cube[1][0] = cube[2][0];
+                cube[2][0] = cube[3][0];
+                cube[3][0] = o;
+                cube[0] = spinFace(cube[0], false);
+                break;
+            }
+            case "D": {
+                Color[] tempRow = cube[1][2];
+                cube[1][2] = cube[4][2];
+                cube[4][2] = cube[3][2];
+                cube[3][2] = cube[2][2];
+                cube[2][2] = tempRow;
+                cube[5] = spinFace(cube[5], false);
+                break;
+            }
+            case "D'": {
+                Color[] tempRow = cube[1][2];
+                cube[1][2] = cube[2][2];
+                cube[2][2] = cube[3][2];
+                cube[3][2] = cube[4][2];
+                cube[4][2] = tempRow;
+                cube[5] = spinFace(cube[5], true);
+                break;
+            }
+            case "R": {
+                Color[] tempColumn = {cube[0][0][2], cube[0][1][2], cube[0][2][2]};
+
+                cube[0][0][2] = cube[1][0][2];
+                cube[0][1][2] = cube[1][1][2];
+                cube[0][2][2] = cube[1][2][2];
+
+                cube[1][0][2] = cube[5][0][2];
+                cube[1][1][2] = cube[5][1][2];
+                cube[1][2][2] = cube[5][2][2];
+
+                cube[5][0][2] = cube[3][0][0];
+                cube[5][1][2] = cube[3][1][0];
+                cube[5][2][2] = cube[3][2][0];
+
+                cube[3][0][0] = tempColumn[2];
+                cube[3][1][0] = tempColumn[1];
+                cube[3][2][0] = tempColumn[0];
+                cube[2] = spinFace(cube[2], false);
+                break;
+            }
+            case "R'": {
+                Color[] tempColumn = {cube[0][0][2], cube[0][1][2], cube[0][2][2]};
+
+                cube[0][0][2] = cube[3][2][0];
+                cube[0][1][2] = cube[3][1][0];
+                cube[0][2][2] = cube[3][0][0];
+
+                cube[1][0][2] = tempColumn[0];
+                cube[1][1][2] = tempColumn[1];
+                cube[1][2][2] = tempColumn[2];
+
+                cube[5][0][2] = cube[1][0][2];
+                cube[5][1][2] = cube[1][1][2];
+                cube[5][2][2] = cube[1][2][2];
+
+                cube[3][0][0] = cube[5][2][2];
+                cube[3][1][0] = cube[5][1][2];
+                cube[3][2][0] = cube[5][0][2];
+                cube[2] = spinFace(cube[2], true);
+                break;
+            }
+            case "L": {
+                Color[] tempColumn = {cube[0][0][0], cube[0][1][0], cube[0][2][0]};
+
+                cube[0][0][0] = cube[3][2][2];
+                cube[0][1][0] = cube[3][1][2];
+                cube[0][2][0] = cube[3][0][2];
+
+                cube[3][2][2] = cube[5][0][0];
+                cube[3][1][2] = cube[5][1][0];
+                cube[3][0][2] = cube[5][2][0];
+
+                cube[5][0][0] = cube[1][0][0];
+                cube[5][1][0] = cube[1][1][0];
+                cube[5][2][0] = cube[1][2][0];
+
+                cube[1][0][0] = tempColumn[0];
+                cube[1][1][0] = tempColumn[1];
+                cube[1][2][0] = tempColumn[2];
+                cube[4] = spinFace(cube[4], false);
+                break;
+            }
+            case "L'": {
+                Color[] tempColumn = {cube[0][0][0], cube[0][1][0], cube[0][2][0]};
+
+                cube[0][0][0] = cube[1][0][0];
+                cube[0][1][0] = cube[1][1][0];
+                cube[0][2][0] = cube[1][2][0];
+
+                cube[3][2][2] = tempColumn[0];
+                cube[3][1][2] = tempColumn[1];
+                cube[3][0][2] = tempColumn[2];
+
+                cube[5][0][0] = cube[3][2][2];
+                cube[5][1][0] = cube[3][1][2];
+                cube[5][2][0] = cube[3][0][2];
+
+                cube[1][0][0] = cube[5][0][0];
+                cube[1][1][0] = cube[5][1][0];
+                cube[1][2][0] = cube[5][2][0];
+                cube[4] = spinFace(cube[4], true);
+                break;
+            }
+            case "F":
+                break;
+            case "F'":
+                break;
+            case "B":
+                break;
+            case "B'":
+                break;
         }
-        else if(turn.equals("U")){
-            Color[] o = cube[4][0];
-            cube[4][0] = cube[1][0];
-            cube[1][0] = cube[2][0];
-            cube[2][0] = cube[3][0];
-            cube[3][0] = o;
-            cube[0] = spinFace(cube[0], false);
-        }
-        else if(turn.equals("D")){
-			Color[] tempRow = cube[1][2];
-			cube[1][2] = cube[4][2];
-			cube[4][2] = cube[3][2];
-			cube[3][2] = cube[2][2];
-			cube[2][2] = tempRow;
-			cube[5] = spinFace(cube[5], false);
-		}
-        else if(turn.equals("D'")){
-			Color[] tempRow = cube[1][2];
-			cube[1][2] = cube[2][2];
-			cube[2][2] = cube[3][2];
-			cube[3][2] = cube[4][2];
-			cube[4][2] = tempRow;
-			cube[5] = spinFace(cube[5],true);
-		}
-        else if(turn.equals("R")){
-			Color[] tempColumn = {cube[0][0][2],cube[0][1][2],cube[0][2][2]};
-
-			cube[0][0][2] = cube[1][0][2];
-			cube[0][1][2] = cube[1][1][2];
-			cube[0][2][2] = cube[1][2][2];
-			
-			cube[1][0][2] = cube[5][0][2];
-			cube[1][1][2] = cube[5][1][2];
-			cube[1][2][2] = cube[5][2][2];
-
-			cube[5][0][2] = cube[3][0][0];
-			cube[5][1][2] = cube[3][1][0];
-			cube[5][2][2] = cube[3][2][0];
-
-			cube[3][0][0] = tempColumn[2];
-			cube[3][1][0] = tempColumn[1];
-			cube[3][2][0] = tempColumn[0];
-            cube[2] = spinFace(cube[2],false);
-        }
-        else if(turn.equals("R'")){
-			Color[] tempColumn = {cube[0][0][2],cube[0][1][2],cube[0][2][2]};
-
-			cube[0][0][2] = cube[3][2][0];
-			cube[0][1][2] = cube[3][1][0];
-			cube[0][2][2] = cube[3][0][0];
-			
-			cube[1][0][2] = tempColumn[0];
-			cube[1][1][2] = tempcolumn[1];
-			cube[1][2][2] = tempColumn[2];
-
-			cube[5][0][2] = cube[1][0][2];
-			cube[5][1][2] = cube[1][1][2];
-			cube[5][2][2] = cube[1][2][2];
-
-			cube[3][0][0] = cube[5][2][2];
-			cube[3][1][0] = cube[5][1][2];
-			cube[3][2][0] = cube[5][0][2];
-            cube[2] = spinFace(cube[2],true);
-        }
-        else if(turn.equals("L")){}
-        else if(turn.equals("L'")){}
-        else if(turn.equals("F")){}
-        else if(turn.equals("F'")){}
-        else if(turn.equals("B")){}
-        else if(turn.equals("B'")){}
 
 
     }
