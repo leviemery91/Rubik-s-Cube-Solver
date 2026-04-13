@@ -148,4 +148,7 @@ public class SmartCubeController {
     public void resetCube(){
         cube.resetCube();
     }
+    public Cube returnCube(){
+        return cube;
+    }
 }

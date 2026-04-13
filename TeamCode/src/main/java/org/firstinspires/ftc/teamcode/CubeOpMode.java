@@ -35,6 +35,8 @@ public class CubeOpMode extends LinearOpMode {
             telemetry.addData("Status", cube.isConnected() ? "Connected" : "Searching...");
             telemetry.addData("Move Count", cube.getMoveCount());
             telemetry.addData("Cube Solved", cube.cubeSolved());
+            displayCube(cube.returnCube());
+            telemetry.addData("\nFacelet", cube.returnCube().convertToFacelet());
             telemetry.update();
             if(gamepad1.b){
                 cube.resetCube();
@@ -43,5 +45,40 @@ public class CubeOpMode extends LinearOpMode {
         }
 
         cube.disconnect();
+    }
+
+    public void displayCube(Cube c){
+        for(int i = 0; i<12;i++) {
+            String row = "";
+            if(i <= 2 || i >= 6){
+                row = row + "            ";
+            }
+            if(i == 0){
+                row = row + "" + c.cube[3][2][2].getI() + " " + c.cube[3][2][1].getI() + " " + c.cube[3][2][0].getI();
+            }else if(i == 1){
+                row = row + "" + c.cube[3][1][2].getI() + " " + c.cube[3][1][1].getI() + " " + c.cube[3][1][0].getI();
+            }else if(i == 2){
+                row = row + "" + c.cube[3][0][2].getI() + " " + c.cube[3][0][1].getI() + " " + c.cube[3][0][0].getI();
+            }else if(i == 3){
+                row = row + "" + c.cube[4][2][0].getI() + " " + c.cube[4][1][0].getI() + " " + c.cube[4][0][0].getI() + " " + c.cube[0][0][0].getI() + " " + c.cube[0][0][1].getI() + " " + c.cube[0][0][2].getI() + " " + c.cube[2][0][2].getI() + " " + c.cube[2][1][2].getI() + " " + c.cube[2][2][2].getI();
+            }else if(i == 4){
+                row = row + "" + c.cube[4][2][1].getI() + " " + c.cube[4][1][1].getI() + " " + c.cube[4][0][1].getI() + " " + c.cube[0][1][0].getI() + " " + c.cube[0][1][1].getI() + " " + c.cube[0][1][2].getI() + " " + c.cube[2][0][1].getI() + " " + c.cube[2][1][1].getI() + " " + c.cube[2][2][1].getI();
+            }else if(i == 5){
+                row = row + "" + c.cube[4][2][2].getI() + " " + c.cube[4][1][2].getI() + " " + c.cube[4][0][2].getI() + " " + c.cube[0][2][0].getI() + " " + c.cube[0][2][1].getI() + " " + c.cube[0][2][2].getI() + " " + c.cube[2][0][0].getI() + " " + c.cube[2][1][0].getI() + " " + c.cube[2][2][0].getI();
+            }if(i == 6){
+                row = row + "" + c.cube[1][0][0].getI() + " " + c.cube[1][0][1].getI() + " " + c.cube[1][0][2].getI();
+            }if(i == 7){
+                row = row + "" + c.cube[1][1][0].getI() + " " + c.cube[1][1][1].getI() + " " + c.cube[1][1][2].getI();
+            }if(i == 8){
+                row = row + "" + c.cube[1][2][0].getI() + " " + c.cube[1][2][1].getI() + " " + c.cube[1][2][2].getI();
+            }if(i == 9){
+                row = row + "" + c.cube[5][0][0].getI() + " " + c.cube[5][0][1].getI() + " " + c.cube[5][0][2].getI();
+            }if(i == 10){
+                row = row + "" + c.cube[5][1][0].getI() + " " + c.cube[5][1][1].getI() + " " + c.cube[5][1][2].getI();
+            }if(i == 11){
+                row = row + "" + c.cube[5][2][0].getI() + " " + c.cube[5][2][1].getI() + " " + c.cube[5][2][2].getI();
+            }
+            telemetry.addData("", row);
+        }
     }
 }
