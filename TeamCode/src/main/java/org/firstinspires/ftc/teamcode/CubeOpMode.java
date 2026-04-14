@@ -8,10 +8,15 @@ import org.firstinspires.ftc.teamcode.SmartCubeController;
 @TeleOp(name="Cube Solver Bot")
 public class CubeOpMode extends LinearOpMode {
     SmartCubeController cube;
-
+    boolean lastX;
+    boolean lastY;
+    String solution = "";
+    String nextMove = "";
+    boolean guidedSolve;
     @Override
     public void runOpMode() {
         cube = new SmartCubeController();
+
         // Replace with your Cube's MAC address found during scanning
         cube.connect(hardwareMap.appContext, "E7:A1:D1:4A:7C:48");
 
@@ -28,6 +33,16 @@ public class CubeOpMode extends LinearOpMode {
                     cubeBytes = cubeBytes + " ";
                 }
             }
+            if(gamepad1.b && !lastX){
+                cube.resetCube();
+                solution = "";
+            }else if(gamepad1.y && !lastY)
+            {
+                solution = cube.returnSolution();
+            }
+            lastX = gamepad1.x;
+            lastY = gamepad1.y;
+
             telemetry.addData("Last Move", move);
             if(cubeState != null)
                 telemetry.addData("Cube State", cubeState.toString());
@@ -35,12 +50,10 @@ public class CubeOpMode extends LinearOpMode {
             telemetry.addData("Status", cube.isConnected() ? "Connected" : "Searching...");
             telemetry.addData("Move Count", cube.getMoveCount());
             telemetry.addData("Cube Solved", cube.cubeSolved());
+            telemetry.addData("Solution", solution);
             displayCube(cube.returnCube());
             telemetry.addData("\nFacelet", cube.returnCube().convertToFacelet());
             telemetry.update();
-            if(gamepad1.b){
-                cube.resetCube();
-            }
             // Logic: If move == "U", run motor for 90 degrees, etc.
         }
 
@@ -81,4 +94,11 @@ public class CubeOpMode extends LinearOpMode {
             telemetry.addData("", row);
         }
     }
+    public void startGuidedSolve(){
+        guidedSolve = true;
+    }
+    public void stopGuidedSolve(){
+        guidedSolve = false;
+    }
+
 }

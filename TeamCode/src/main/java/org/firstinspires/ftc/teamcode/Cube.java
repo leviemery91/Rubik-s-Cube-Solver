@@ -287,7 +287,7 @@ public class Cube {
 
     public String convertToFacelet(){
         String facelet = "";
-        int[] order = {0,4,1,2,3,5};
+        int[] order = {0,2,1,5,4,3}; //urfdlb
         for(int i = 0; i < 6;i++){
             for(int j = 0; j < 3; j++){
                 for(int k = 0; k < 3; k++){
