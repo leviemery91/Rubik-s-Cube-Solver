@@ -36,6 +36,9 @@ public class SmartCubeController {
     private boolean connected = false;
     private int moveCount = 0;
 
+    public boolean guidedSolve;
+    public String solution = "";
+
     public SmartCubeController() {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
@@ -101,6 +104,9 @@ public class SmartCubeController {
         lastMove = move;
         moveCount++;
         updateCube(move);
+        if(guidedSolve){
+            updateSolution(move);
+        }
     }
 
     private String decodeSlice(int code) {
@@ -153,15 +159,15 @@ public class SmartCubeController {
     public Cube returnCube(){
         return cube;
     }
-    public String returnSolution(){
-        return simpleSolve(cube.convertToFacelet());
+
+    public void findSolution(){
+        solution = simpleSolve(cube.convertToFacelet());
     }
 
     public static String simpleSolve(String scrambledCube) {
         String result = new Search().solution(scrambledCube, 21, 100000000, 0, 0);
         return result;
     }
-
     public static void outputControl(String scrambledCube) {
         String result = new Search().solution(scrambledCube, 21, 100000000, 0, Search.APPEND_LENGTH);
         System.out.println(result);
@@ -171,7 +177,6 @@ public class SmartCubeController {
         System.out.println(result);
         // R  L2 D  R  F  U2 F' L  F' .  B2 D' R2 B2 R2 L2 U  F2 L2 B2 U2 R2
     }
-
     public static void findShorterSolutions(String scrambledCube) {
         //Find shorter solutions (try more probes even a solution has already been found)
         //In this example, we try AT LEAST 10000 phase2 probes to find shorter solutions.
@@ -179,7 +184,6 @@ public class SmartCubeController {
         System.out.println(result);
         // L2 U  D2 R' B  U2 L  F  U  R2 D2 F2 U' L2 U  B  D  R'
     }
-
     public static void continueSearch(String scrambledCube) {
         //Continue to find shorter solutions
         Search searchObj = new Search();
@@ -202,6 +206,56 @@ public class SmartCubeController {
         result = searchObj.next(500, 0, 0);
         System.out.println(result);
         // L2 U  D2 R' B  U2 L  F  U  R2 D2 F2 U' L2 U  B  D  R'
+    }
+
+    public String getNextMove(){
+        if(solution.length() >= 1)
+            return solution.split(" ")[0];
+        else {
+            return "";
+        }
+    }
+    public void updateSolution(String turn){
+        if(turn.equals(solution)){
+            solution = "";
+            guidedSolve = false;
+            return;
+        }
+        String nextMove = getNextMove();
+        if(nextMove.substring(0,1).equals(turn.substring(0,1))){
+            if(turn.length() == 1){
+                if(nextMove.length() == 1){
+                    solution = solution.substring(2);
+                }else if(nextMove.substring(1,2).equals("2")){
+                    solution = turn + solution.substring(2);
+                }else{
+                    solution = turn.substring(0,1) + "2" + solution.substring(2);
+                }
+            }else {
+                if(nextMove.length() == 1){
+                    solution = nextMove + "2" + solution.substring(1);
+                }else if(nextMove.substring(1,2).equals("2")){
+                    solution = turn + solution.substring(3);
+                }else{
+                    solution = solution.substring(3);
+                }
+            }
+        }else{
+            if(turn.length() == 1){
+                solution = turn + "' " + solution;
+            }else{
+                solution = turn.substring(0,1) + " " + solution;
+            }
+        }
+    }
+    public String returnSolution(){
+        return solution;
+    }
+    public void startGuidedSolve(){
+        guidedSolve = true;
+    }
+    public void stopGuidedSolve(){
+        guidedSolve = false;
     }
 
 }

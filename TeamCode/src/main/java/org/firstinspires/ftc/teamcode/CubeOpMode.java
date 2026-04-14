@@ -10,9 +10,7 @@ public class CubeOpMode extends LinearOpMode {
     SmartCubeController cube;
     boolean lastX;
     boolean lastY;
-    String solution = "";
-    String nextMove = "";
-    boolean guidedSolve;
+    boolean lastB;
     @Override
     public void runOpMode() {
         cube = new SmartCubeController();
@@ -33,13 +31,20 @@ public class CubeOpMode extends LinearOpMode {
                     cubeBytes = cubeBytes + " ";
                 }
             }
-            if(gamepad1.b && !lastX){
+            if(gamepad1.b && !lastB){
                 cube.resetCube();
-                solution = "";
+                cube.solution = "";
             }else if(gamepad1.y && !lastY)
             {
-                solution = cube.returnSolution();
+                cube.findSolution();
+            }else if(gamepad1.x && !lastX){
+                if(cube.guidedSolve){
+                    cube.stopGuidedSolve();
+                }else{
+                    cube.startGuidedSolve();
+                }
             }
+            lastB = gamepad1.b;
             lastX = gamepad1.x;
             lastY = gamepad1.y;
 
@@ -50,7 +55,9 @@ public class CubeOpMode extends LinearOpMode {
             telemetry.addData("Status", cube.isConnected() ? "Connected" : "Searching...");
             telemetry.addData("Move Count", cube.getMoveCount());
             telemetry.addData("Cube Solved", cube.cubeSolved());
-            telemetry.addData("Solution", solution);
+            telemetry.addData("Solution", cube.returnSolution());
+            telemetry.addData("Next Move", cube.getNextMove());
+            telemetry.addData("Guided Solve", cube.guidedSolve);
             displayCube(cube.returnCube());
             telemetry.addData("\nFacelet", cube.returnCube().convertToFacelet());
             telemetry.update();
@@ -94,11 +101,6 @@ public class CubeOpMode extends LinearOpMode {
             telemetry.addData("", row);
         }
     }
-    public void startGuidedSolve(){
-        guidedSolve = true;
-    }
-    public void stopGuidedSolve(){
-        guidedSolve = false;
-    }
+
 
 }
